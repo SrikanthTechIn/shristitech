@@ -1,10 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { RibbonCuttingScreen } from './components/RibbonCuttingScreen';
 
 type PageRoute = 'home' | 'about' | 'remote' | 'contact' | 'privacy' | 'terms';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageRoute>('home');
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Ribbon Cutting Inauguration Screen state
+  const [showRibbonScreen, setShowRibbonScreen] = useState(() => {
+    try {
+      return localStorage.getItem('shristi_ribbon_inaugurated') !== 'true';
+    } catch {
+      return true;
+    }
+  });
+
+  const handleRibbonComplete = () => {
+    try {
+      localStorage.setItem('shristi_ribbon_inaugurated', 'true');
+    } catch {
+      // ignore
+    }
+    setShowRibbonScreen(false);
+  };
 
   // Form states
   const [formName, setFormName] = useState('');
@@ -193,6 +212,25 @@ export default function App() {
 
   return (
     <div className="site-wrapper">
+      {/* Grand Inauguration Ribbon Cutting Screen */}
+      <RibbonCuttingScreen
+        isOpen={showRibbonScreen}
+        onComplete={handleRibbonComplete}
+      />
+
+      {/* Floating Replay Inauguration Button */}
+      {!showRibbonScreen && (
+        <button
+          onClick={() => setShowRibbonScreen(true)}
+          className="fixed bottom-5 left-5 z-40 px-3.5 py-2 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-amber-400/50 text-amber-300 hover:text-amber-200 text-xs font-bold shadow-xl flex items-center gap-2 transition-all hover:scale-105 active:scale-95 backdrop-blur-md cursor-pointer"
+          title="Replay Official Inauguration Ribbon Cutting Ceremony"
+          aria-label="Replay Inauguration"
+        >
+          <span className="text-sm">🎀</span>
+          <span>Inauguration Ceremony</span>
+        </button>
+      )}
+
       {/* 100% Exact Header */}
       <header className="site-header">
         <div className="wrap head">
